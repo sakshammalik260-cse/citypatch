@@ -1,0 +1,456 @@
+{
+  "library_version": "1.0",
+  "currency": "INR",
+  "data_status": "prototype_estimates",
+  "modules": [
+    {
+      "module_id": "CP001",
+      "name": "Modular Pedestrian Refuge Island",
+      "category": "pedestrian_safety",
+      "solves": [
+        "unsafe_crossing",
+        "long_crossing_distance",
+        "pedestrian_vehicle_conflict"
+      ],
+      "description": "A modular protected waiting area that allows pedestrians to cross a road in stages.",
+      "installation_environment": [
+        "urban_road",
+        "campus_road",
+        "market_street"
+      ],
+      "materials": [
+        "precast_concrete",
+        "recycled_polymer_bollards",
+        "reflective_markings"
+      ],
+      "estimated_cost_inr": {
+        "min": 25000,
+        "max": 60000
+      },
+      "estimated_installation_hours": {
+        "min": 4,
+        "max": 12
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Requires adequate road width",
+        "Must maintain vehicle clearance",
+        "Final dimensions require site verification"
+      ]
+    },
+    {
+      "module_id": "CP002",
+      "name": "Solar Safety Bollard",
+      "category": "pedestrian_safety",
+      "solves": [
+        "unsafe_crossing",
+        "poor_visibility",
+        "pedestrian_vehicle_conflict"
+      ],
+      "description": "A modular high-visibility bollard with solar-powered lighting intended to improve pedestrian-zone visibility and discourage vehicle intrusion.",
+      "installation_environment": [
+        "urban_road",
+        "campus_road",
+        "market_street",
+        "pedestrian_zone"
+      ],
+      "materials": [
+        "recycled_polymer_or_metal_body",
+        "reflective_markings",
+        "solar_led_unit",
+        "anchoring_hardware"
+      ],
+      "estimated_cost_inr": {
+        "min": 3000,
+        "max": 8000
+      },
+      "estimated_installation_hours": {
+        "min": 1,
+        "max": 3
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Placement must not obstruct pedestrian movement",
+        "Adequate spacing and vehicle clearance must be verified",
+        "Solar charging requires suitable light exposure",
+        "Final placement requires site verification"
+      ]
+    },
+    {
+      "module_id": "CP003",
+      "name": "Raised Crossing Module",
+      "category": "pedestrian_safety",
+      "solves": [
+        "unsafe_crossing",
+        "pedestrian_vehicle_conflict",
+        "poor_visibility"
+      ],
+      "description": "A raised pedestrian crossing concept intended to improve crossing visibility and encourage lower vehicle speeds at pedestrian conflict points.",
+      "installation_environment": [
+        "campus_road",
+        "local_street",
+        "market_street"
+      ],
+      "materials": [
+        "modular_rubber_or_precast_elements",
+        "reflective_markings",
+        "signage",
+        "anchoring_hardware"
+      ],
+      "estimated_cost_inr": {
+        "min": 30000,
+        "max": 90000
+      },
+      "estimated_installation_hours": {
+        "min": 6,
+        "max": 16
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Road geometry and drainage must be verified",
+        "Must not create unsafe vehicle transitions",
+        "Accessibility requirements must be reviewed",
+        "Final dimensions and placement require engineering verification"
+      ]
+    },
+    {
+      "module_id": "CP004",
+      "name": "Modular Accessibility Ramp",
+      "category": "accessibility",
+      "solves": [
+        "accessibility_barrier",
+        "broken_walkway"
+      ],
+      "description": "A modular ramp system intended to provide step-free access across small level differences in pedestrian environments.",
+      "installation_environment": [
+        "campus",
+        "public_building_entrance",
+        "pedestrian_zone",
+        "market_street"
+      ],
+      "materials": [
+        "prefabricated_ramp_panels",
+        "anti_slip_surface",
+        "handrail_components",
+        "anchoring_hardware"
+      ],
+      "estimated_cost_inr": {
+        "min": 15000,
+        "max": 50000
+      },
+      "estimated_installation_hours": {
+        "min": 3,
+        "max": 10
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Required gradient must be verified before installation",
+        "Landing space and clear width must be verified",
+        "Surface must provide adequate slip resistance",
+        "Final design must comply with applicable accessibility requirements"
+      ]
+    },
+    {
+      "module_id": "CP005",
+      "name": "Tactile Guidance Path",
+      "category": "accessibility",
+      "solves": [
+        "accessibility_barrier",
+        "broken_walkway"
+      ],
+      "description": "A modular tactile paving path intended to assist people with visual impairments in navigating pedestrian spaces.",
+      "installation_environment": [
+        "campus",
+        "pedestrian_zone",
+        "public_building_entrance",
+        "transit_area",
+        "footpath"
+      ],
+      "materials": [
+        "tactile_paving_tiles",
+        "adhesive_or_mortar",
+        "edge_finishing_material"
+      ],
+      "estimated_cost_inr": {
+        "min": 8000,
+        "max": 30000
+      },
+      "estimated_installation_hours": {
+        "min": 3,
+        "max": 12
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Guidance path layout must be verified on site",
+        "Warning and directional tactile surfaces must be used appropriately",
+        "Installation must not introduce trip hazards",
+        "Final layout must comply with applicable accessibility requirements"
+      ]
+    },
+    {
+      "module_id": "CP006",
+      "name": "Accessible Walkway Module",
+      "category": "accessibility",
+      "solves": [
+        "accessibility_barrier",
+        "broken_walkway",
+        "pedestrian_vehicle_conflict"
+      ],
+      "description": "A modular pedestrian pathway intended to create a clearer, more accessible walking route through areas with inadequate pedestrian infrastructure.",
+      "installation_environment": [
+        "campus",
+        "market_street",
+        "public_space",
+        "pedestrian_zone"
+      ],
+      "materials": [
+        "modular_paving_units",
+        "edge_restraints",
+        "anti_slip_surface",
+        "base_material"
+      ],
+      "estimated_cost_inr": {
+        "min": 20000,
+        "max": 70000
+      },
+      "estimated_installation_hours": {
+        "min": 6,
+        "max": 20
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Available clear width must be verified",
+        "Surface levels and drainage must be assessed",
+        "Route must remain free from fixed obstructions",
+        "Final dimensions require site and accessibility verification"
+      ]
+    },
+    {
+      "module_id": "CP007",
+      "name": "Solar Shade Canopy",
+      "category": "heat_public_space",
+      "solves": [
+        "missing_shade",
+        "missing_seating"
+      ],
+      "description": "A modular shade structure intended to provide weather protection and improve comfort in exposed pedestrian waiting and public areas.",
+      "installation_environment": [
+        "campus",
+        "public_space",
+        "pedestrian_zone",
+        "transit_waiting_area",
+        "market_street"
+      ],
+      "materials": [
+        "modular_metal_frame",
+        "weather_resistant_canopy",
+        "solar_panel",
+        "anchoring_hardware"
+      ],
+      "estimated_cost_inr": {
+        "min": 40000,
+        "max": 120000
+      },
+      "estimated_installation_hours": {
+        "min": 6,
+        "max": 16
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Structural stability and anchoring must be verified",
+        "Placement must maintain adequate pedestrian clearance",
+        "Solar panel orientation requires suitable sunlight exposure",
+        "Underground utilities and site conditions must be checked before installation"
+      ]
+    },
+    {
+      "module_id": "CP008",
+      "name": "Modular Bench",
+      "category": "heat_public_space",
+      "solves": [
+        "missing_seating"
+      ],
+      "description": "A modular public seating unit intended to provide accessible resting space in pedestrian and community areas.",
+      "installation_environment": [
+        "campus",
+        "public_space",
+        "pedestrian_zone",
+        "transit_waiting_area",
+        "market_street"
+      ],
+      "materials": [
+        "recycled_plastic_or_timber_seat",
+        "metal_support_frame",
+        "anchoring_hardware"
+      ],
+      "estimated_cost_inr": {
+        "min": 8000,
+        "max": 25000
+      },
+      "estimated_installation_hours": {
+        "min": 1,
+        "max": 4
+      },
+      "requires_engineer_review": false,
+      "constraints": [
+        "Must not obstruct the pedestrian clear path",
+        "Placement should provide adequate surrounding circulation space",
+        "Ground surface must support secure installation",
+        "Accessibility of the surrounding area should be considered"
+      ]
+    },
+    {
+      "module_id": "CP009",
+      "name": "Planter Barrier",
+      "category": "heat_public_space",
+      "solves": [
+        "pedestrian_vehicle_conflict",
+        "missing_shade"
+      ],
+      "description": "A modular planted barrier intended to help separate pedestrian areas from vehicle movement while introducing greenery into public space.",
+      "installation_environment": [
+        "campus",
+        "market_street",
+        "public_space",
+        "pedestrian_zone"
+      ],
+      "materials": [
+        "modular_planter_container",
+        "soil_or_growing_medium",
+        "locally_suitable_plants",
+        "drainage_layer"
+      ],
+      "estimated_cost_inr": {
+        "min": 5000,
+        "max": 20000
+      },
+      "estimated_installation_hours": {
+        "min": 1,
+        "max": 5
+      },
+      "requires_engineer_review": false,
+      "constraints": [
+        "Must not obstruct pedestrian visibility or movement",
+        "Plant selection must suit local environmental conditions",
+        "Drainage and maintenance requirements must be considered",
+        "Must not be treated as a certified crash-protection barrier"
+      ]
+    },
+    {
+      "module_id": "CP010",
+      "name": "Permeable Paver Module",
+      "category": "water_drainage",
+      "solves": [
+        "waterlogging",
+        "poor_drainage",
+        "broken_walkway"
+      ],
+      "description": "A modular permeable paving system intended to create a walkable surface while allowing stormwater to infiltrate through the pavement.",
+      "installation_environment": [
+        "campus",
+        "pedestrian_zone",
+        "public_space",
+        "footpath",
+        "low_speed_area"
+      ],
+      "materials": [
+        "permeable_paving_units",
+        "graded_aggregate_base",
+        "bedding_material",
+        "edge_restraints"
+      ],
+      "estimated_cost_inr": {
+        "min": 15000,
+        "max": 60000
+      },
+      "estimated_installation_hours": {
+        "min": 6,
+        "max": 20
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Existing soil and drainage conditions must be assessed",
+        "Sub-base design must suit expected loads",
+        "Installation must not redirect runoff toward buildings or unsafe areas",
+        "Final drainage design requires site verification"
+      ]
+    },
+    {
+      "module_id": "CP011",
+      "name": "Modular Rain Garden",
+      "category": "water_drainage",
+      "solves": [
+        "waterlogging",
+        "poor_drainage"
+      ],
+      "description": "A planted modular landscape feature intended to temporarily collect and manage surface runoff while adding greenery to public space.",
+      "installation_environment": [
+        "campus",
+        "public_space",
+        "roadside",
+        "pedestrian_zone",
+        "parking_edge"
+      ],
+      "materials": [
+        "modular_planter_or_basin",
+        "engineered_soil",
+        "drainage_aggregate",
+        "locally_suitable_plants",
+        "overflow_components"
+      ],
+      "estimated_cost_inr": {
+        "min": 20000,
+        "max": 80000
+      },
+      "estimated_installation_hours": {
+        "min": 6,
+        "max": 20
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "Runoff source and flow direction must be verified",
+        "Overflow routing must be provided where required",
+        "Plant selection must suit local climate and maintenance capacity",
+        "Underground utilities and nearby structures must be checked"
+      ]
+    },
+    {
+      "module_id": "CP012",
+      "name": "Surface Drainage Channel",
+      "category": "water_drainage",
+      "solves": [
+        "waterlogging",
+        "poor_drainage"
+      ],
+      "description": "A modular surface drainage channel intended to collect and guide runoff away from localized waterlogging areas toward an appropriate drainage destination.",
+      "installation_environment": [
+        "campus",
+        "pedestrian_zone",
+        "market_street",
+        "roadside",
+        "public_space"
+      ],
+      "materials": [
+        "prefabricated_channel_units",
+        "grating",
+        "bedding_material",
+        "connection_components"
+      ],
+      "estimated_cost_inr": {
+        "min": 10000,
+        "max": 50000
+      },
+      "estimated_installation_hours": {
+        "min": 4,
+        "max": 16
+      },
+      "requires_engineer_review": true,
+      "constraints": [
+        "A safe drainage outlet must be identified",
+        "Required channel capacity and slope must be verified",
+        "Grating must remain safe for pedestrian movement",
+        "Installation must not transfer flooding to another location"
+      ]
+    }
+  ]
+}
