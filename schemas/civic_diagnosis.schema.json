@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CITYPATCH Civic Diagnosis",
+  "description": "Structured civic diagnosis produced from a real-world location image and user context.",
+  "type": "object",
+  "additionalProperties": false,
+
+  "properties": {
+    "scene_type": {
+      "type": "string",
+      "enum": [
+        "urban_road",
+        "campus_road",
+        "local_street",
+        "market_street",
+        "pedestrian_zone",
+        "public_space",
+        "public_building_entrance",
+        "transit_waiting_area",
+        "footpath",
+        "parking_edge",
+        "other"
+      ]
+    },
+
+    "scene_summary": {
+      "type": "string",
+      "description": "Short factual description of the visible environment."
+    },
+
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "unsafe_crossing",
+              "long_crossing_distance",
+              "pedestrian_vehicle_conflict",
+              "poor_visibility",
+              "missing_shade",
+              "broken_walkway",
+              "accessibility_barrier",
+              "waterlogging",
+              "poor_drainage",
+              "missing_seating"
+            ]
+          },
+
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+
+          "evidence": {
+            "type": "string",
+            "description": "Visible evidence supporting the detected problem."
+          }
+        },
+
+        "required": [
+          "type",
+          "severity",
+          "confidence",
+          "evidence"
+        ]
+      }
+    },
+
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+
+    "missing_information": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+
+    "requires_human_review": {
+      "type": "boolean"
+    }
+  },
+
+  "required": [
+    "scene_type",
+    "scene_summary",
+    "problems",
+    "constraints",
+    "missing_information",
+    "requires_human_review"
+  ]
+}
