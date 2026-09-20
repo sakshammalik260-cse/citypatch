@@ -93,6 +93,7 @@ def build_bom(module_ids):
             requires_engineer_review = True
 
     return {
+        "consolidated_materials": consolidate_materials(selected_modules),
         "bom_status": "prototype_estimate",
         "module_count": len(selected_modules),
         "modules": selected_modules,
@@ -115,6 +116,44 @@ def build_bom(module_ids):
             "and are not supplier quotations or construction-ready costs."
         )
     }
+def consolidate_materials(selected_modules):
+    """
+    Consolidate repeated material names across selected modules.
+
+    This counts module occurrences only.
+    It does NOT represent physical material quantities.
+    """
+
+    material_usage = {}
+
+    for module in selected_modules:
+        module_id = module["module_id"]
+
+        for material in module["materials"]:
+
+            if material not in material_usage:
+                material_usage[material] = {
+                    "material": material,
+                    "used_by_modules": [],
+                    "module_occurrences": 0
+                }
+
+            material_usage[material]["used_by_modules"].append(
+                module_id
+            )
+
+            material_usage[material]["module_occurrences"] += 1
+
+    consolidated = list(material_usage.values())
+
+    consolidated.sort(
+        key=lambda item: (
+            -item["module_occurrences"],
+            item["material"]
+        )
+    )
+
+    return consolidated
 def build_tier_boms(patch_tiers):
     """
     Build deterministic BOM summaries for each CITYPATCH
@@ -136,7 +175,46 @@ def build_tier_boms(patch_tiers):
         }
 
     return tier_boms
+def build_tier_summary(tier_boms):
+    """
+    Create compact CITYPATCH tier summaries suitable
+    for API and frontend display.
+    """
 
+    summaries = {}
+
+    for tier_id, tier_data in tier_boms.items():
+
+        bom = tier_data["bom"]
+
+        summaries[tier_id] = {
+            "name": tier_data["name"],
+            "module_ids": [
+                module["module_id"]
+                for module in bom["modules"]
+            ],
+            "module_names": [
+                module["name"]
+                for module in bom["modules"]
+            ],
+            "module_count": bom["module_count"],
+            "unique_material_count": len(
+                bom["consolidated_materials"]
+            ),
+            "estimated_cost_inr": (
+                bom["estimated_total_cost_inr"]
+            ),
+            "estimated_installation_hours": (
+                bom["estimated_total_installation_hours"]
+            ),
+            "requires_engineer_review": (
+                bom["requires_engineer_review"]
+            ),
+            "quantity_status": bom["quantity_status"],
+            "estimate_status": bom["bom_status"]
+        }
+
+    return summaries
 # ---------------------------------------------------------
 # COMMAND-LINE TEST
 # ---------------------------------------------------------
