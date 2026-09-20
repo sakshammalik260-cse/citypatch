@@ -12,7 +12,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 MODULE_LIBRARY_PATH = ROOT_DIR / "data" / "civic_modules.json"
 PROBLEM_MAP_PATH = ROOT_DIR / "data" / "problem_module_map.json"
 PATCH_TIERS_PATH = ROOT_DIR / "data" / "patch_tiers.json"
-
+COMPATIBILITY_PATH = ROOT_DIR / "data" / "module_compatibility.json"
 # ---------------------------------------------------------
 # LOAD DATA
 # ---------------------------------------------------------
@@ -28,7 +28,47 @@ def load_problem_map():
 def load_patch_tiers():
     with PATCH_TIERS_PATH.open("r", encoding="utf-8") as file:
         return json.load(file)
+def load_compatibility_map():
+    with COMPATIBILITY_PATH.open("r", encoding="utf-8") as file:
+        return json.load(file)
+def is_potentially_compatible(candidate_id, selected_ids, compatibility_map):
+    """
+    Check prototype compatibility between a candidate module
+    and all modules already selected.
 
+    This is only a CITYPATCH pre-screen.
+    It is not engineering approval.
+    """
+
+    if not selected_ids:
+        return True
+
+    modules = compatibility_map["modules"]
+
+    if candidate_id not in modules:
+        return False
+
+    candidate_links = set(
+        modules[candidate_id]["potentially_complementary_with"]
+    )
+
+    for selected_id in selected_ids:
+
+        if selected_id not in modules:
+            return False
+
+        selected_links = set(
+            modules[selected_id]["potentially_complementary_with"]
+        )
+
+        # Require compatibility to be declared in both directions.
+        if (
+            selected_id not in candidate_links
+            or candidate_id not in selected_links
+        ):
+            return False
+
+    return True    
 # ---------------------------------------------------------
 # PATCH ENGINE
 # ---------------------------------------------------------
@@ -130,11 +170,19 @@ def select_candidate_modules(diagnosis):
     return candidates
 def build_patch_tiers(candidates):
     """
-    Build deterministic Quick, Smart, and Full CITYPATCH options
-    from the ranked candidate modules.
+    Build Quick, Smart, and Full CITYPATCH options.
+
+    Quick and Smart prioritize new civic-problem coverage.
+
+    Full first achieves useful problem coverage, then may add
+    compatible complementary modules up to its configured limit.
+
+    Compatibility is only a prototype pre-screen and does not
+    represent engineering approval.
     """
 
     tier_config = load_patch_tiers()["tiers"]
+    compatibility_map = load_compatibility_map()
 
     result = {}
 
@@ -142,15 +190,116 @@ def build_patch_tiers(candidates):
         config = tier_config[tier_id]
         max_modules = config["max_modules"]
 
-        selected_modules = candidates[:max_modules]
+        selected_modules = []
+        covered_problems = set()
+        remaining_candidates = candidates.copy()
+
+        # -------------------------------------------------
+        # STAGE 1: Prefer modules that add new problem coverage
+        # -------------------------------------------------
+
+        while remaining_candidates and len(selected_modules) < max_modules:
+
+            best_candidate = None
+            best_new_coverage = -1
+
+            for candidate in remaining_candidates:
+
+                candidate_problems = set(
+                    candidate["matched_problems"]
+                )
+
+                new_problems = (
+                    candidate_problems - covered_problems
+                )
+
+                new_coverage = len(new_problems)
+
+                if best_candidate is None:
+                    best_candidate = candidate
+                    best_new_coverage = new_coverage
+                    continue
+
+                if new_coverage > best_new_coverage:
+                    best_candidate = candidate
+                    best_new_coverage = new_coverage
+
+                elif (
+                    new_coverage == best_new_coverage
+                    and candidate["score"] > best_candidate["score"]
+                ):
+                    best_candidate = candidate
+
+            if best_candidate is None:
+                break
+
+            # No need to add redundant modules during
+            # the coverage stage.
+            if best_new_coverage == 0:
+                break
+
+            selected_modules.append(best_candidate)
+
+            covered_problems.update(
+                best_candidate["matched_problems"]
+            )
+
+            remaining_candidates.remove(best_candidate)
+
+        # -------------------------------------------------
+        # STAGE 2: Full Patch may add compatible complements
+        # -------------------------------------------------
+
+        if tier_id == "full":
+
+            while (
+                remaining_candidates
+                and len(selected_modules) < max_modules
+            ):
+
+                selected_ids = [
+                    module["module_id"]
+                    for module in selected_modules
+                ]
+
+                compatible_candidate = None
+
+                for candidate in remaining_candidates:
+
+                    if is_potentially_compatible(
+                        candidate["module_id"],
+                        selected_ids,
+                        compatibility_map
+                    ):
+                        compatible_candidate = candidate
+                        break
+
+                if compatible_candidate is None:
+                    break
+
+                selected_modules.append(
+                    compatible_candidate
+                )
+
+                covered_problems.update(
+                    compatible_candidate["matched_problems"]
+                )
+
+                remaining_candidates.remove(
+                    compatible_candidate
+                )
 
         result[tier_id] = {
             "name": config["name"],
             "description": config["description"],
             "modules": selected_modules,
             "module_count": len(selected_modules),
+            "covered_problems": sorted(covered_problems),
             "combined_score": round(
-                sum(module["score"] for module in selected_modules),
+                sum(
+                    module["score"]
+                    for module in selected_modules
+                ),
                 3
             )
         }

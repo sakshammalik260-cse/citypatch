@@ -1,0 +1,100 @@
+{
+  "compatibility_version": "1.0",
+  "status": "prototype_prescreen",
+  "requires_site_specific_review": true,
+  "description": "Potentially complementary CITYPATCH module combinations used for prototype tier generation. These rules do not represent engineering approval or construction compatibility.",
+  "modules": {
+    "CP001": {
+      "potentially_complementary_with": [
+        "CP002",
+        "CP003",
+        "CP005"
+      ]
+    },
+    "CP002": {
+      "potentially_complementary_with": [
+        "CP001",
+        "CP003",
+        "CP006",
+        "CP009"
+      ]
+    },
+    "CP003": {
+      "potentially_complementary_with": [
+        "CP001",
+        "CP002",
+        "CP005",
+        "CP006"
+      ]
+    },
+    "CP004": {
+      "potentially_complementary_with": [
+        "CP005",
+        "CP006"
+      ]
+    },
+    "CP005": {
+      "potentially_complementary_with": [
+        "CP001",
+        "CP003",
+        "CP004",
+        "CP006"
+      ]
+    },
+    "CP006": {
+      "potentially_complementary_with": [
+        "CP002",
+        "CP003",
+        "CP004",
+        "CP005",
+        "CP007",
+        "CP008",
+        "CP009",
+        "CP010",
+        "CP012"
+      ]
+    },
+    "CP007": {
+      "potentially_complementary_with": [
+        "CP006",
+        "CP008",
+        "CP009"
+      ]
+    },
+    "CP008": {
+      "potentially_complementary_with": [
+        "CP006",
+        "CP007",
+        "CP009"
+      ]
+    },
+    "CP009": {
+      "potentially_complementary_with": [
+        "CP002",
+        "CP006",
+        "CP007",
+        "CP008"
+      ]
+    },
+    "CP010": {
+      "potentially_complementary_with": [
+        "CP006",
+        "CP011",
+        "CP012"
+      ]
+    },
+    "CP011": {
+      "potentially_complementary_with": [
+        "CP010",
+        "CP012"
+      ]
+    },
+    "CP012": {
+      "potentially_complementary_with": [
+        "CP006",
+        "CP010",
+        "CP011"
+      ]
+    }
+  }
+}
