@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -60,7 +61,9 @@ def analyze_civic_image(image_path, user_context=""):
     image_path = Path(image_path)
 
     if not image_path.exists():
-        raise FileNotFoundError(f"Image not found: {image_path}")
+        raise FileNotFoundError(
+            f"Image not found: {image_path}"
+        )
 
     prompt = load_prompt()
     schema = load_schema()
@@ -85,64 +88,75 @@ Analyze the supplied image according to the CITYPATCH Civic Compiler rules.
 Return only the structured civic diagnosis.
 """
 
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=[
-            full_prompt,
-            image
-        ],
-        config={
-            "response_mime_type": "application/json",
-            "response_json_schema": schema
-        }
-    )
+    models_to_try = [
+        "gemini-3.6-flash",
+        "gemini-3.5-flash"
+    ]
+
+    response = None
+    last_error = None
+
+    for model_name in models_to_try:
+
+        for attempt in range(2):
+
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=[
+                        full_prompt,
+                        image
+                    ],
+                    config={
+                        "response_mime_type": "application/json",
+                        "response_json_schema": schema
+                    }
+                )
+
+                break
+
+            except Exception as error:
+                last_error = error
+                error_text = str(error)
+
+                temporary_failure = (
+                    "503" in error_text
+                    or "UNAVAILABLE" in error_text
+                    or "high demand" in error_text.lower()
+                )
+
+                if not temporary_failure:
+                    raise
+
+                if attempt == 0:
+                    time.sleep(2)
+
+        if response is not None:
+            break
+
+    if response is None:
+        raise RuntimeError(
+            "Gemini is temporarily unavailable after retrying "
+            "the available CITYPATCH models."
+        ) from last_error
 
     if not response.text:
-        raise RuntimeError("Gemini returned an empty response.")
+        raise RuntimeError(
+            "Gemini returned an empty response."
+        )
 
     try:
         diagnosis = json.loads(response.text)
+
     except json.JSONDecodeError as error:
         raise RuntimeError(
             "Gemini returned invalid JSON."
         ) from error
 
     # Second validation layer performed locally by CITYPATCH.
-    validate(instance=diagnosis, schema=schema)
+    validate(
+        instance=diagnosis,
+        schema=schema
+    )
 
     return diagnosis
-
-
-# ---------------------------------------------------------
-# COMMAND-LINE TEST
-# ---------------------------------------------------------
-
-def main():
-    if len(sys.argv) < 2:
-        print(
-            "Usage: python backend/civic_compiler.py "
-            "<image_path> [optional context]"
-        )
-        sys.exit(1)
-
-    image_path = sys.argv[1]
-
-    user_context = " ".join(sys.argv[2:]) if len(sys.argv) > 2 else ""
-
-    try:
-        diagnosis = analyze_civic_image(
-            image_path=image_path,
-            user_context=user_context
-        )
-
-        print("\nCITYPATCH CIVIC DIAGNOSIS\n")
-        print(json.dumps(diagnosis, indent=2))
-
-    except Exception as error:
-        print("\nCITYPATCH CIVIC COMPILER ERROR")
-        print(str(error))
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
