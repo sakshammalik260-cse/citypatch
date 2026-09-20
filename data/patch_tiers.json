@@ -1,0 +1,20 @@
+{
+  "tier_version": "1.0",
+  "tiers": {
+    "quick": {
+      "name": "Quick Patch",
+      "description": "A minimal intervention focused on the highest-priority civic issue.",
+      "max_modules": 1
+    },
+    "smart": {
+      "name": "Smart Patch",
+      "description": "A balanced intervention addressing multiple related civic issues.",
+      "max_modules": 2
+    },
+    "full": {
+      "name": "Full Patch",
+      "description": "A broader intervention combining multiple compatible civic modules.",
+      "max_modules": 3
+    }
+  }
+}

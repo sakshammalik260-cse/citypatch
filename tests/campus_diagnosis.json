@@ -1,0 +1,27 @@
+{
+  "scene_type": "footpath",
+  "scene_summary": "A roadside footpath edge adjacent to an elevated planter wall, showing damaged paving, exposed soil, loose utility hoses, and leaf-filled kerbside drainage.",
+  "problems": [
+    {
+      "type": "broken_walkway",
+      "severity": "medium",
+      "confidence": 0.95,
+      "evidence": "Cracked and eroded concrete paving along the pedestrian surface exposing loose soil and dry leaves."
+    },
+    {
+      "type": "accessibility_barrier",
+      "severity": "medium",
+      "confidence": 0.88,
+      "evidence": "Uneven step-downs, broken paving edges, and exposed flexible pipes lying across the ground level create tripping hazards."
+    },
+    {
+      "type": "poor_drainage",
+      "severity": "medium",
+      "confidence": 0.82,
+      "evidence": "The concrete kerbside drain gutter is partially filled with accumulated leaf debris, dirt, and loose wiring."
+    }
+  ],
+  "constraints": [],
+  "missing_information": [],
+  "requires_human_review": true
+}

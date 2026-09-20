@@ -1,0 +1,49 @@
+{
+  "mapping_version": "1.0",
+  "description": "Deterministic mapping between CITYPATCH civic problem IDs and permitted Civic Patch Library modules.",
+  "problem_to_modules": {
+    "unsafe_crossing": [
+      "CP001",
+      "CP002",
+      "CP003"
+    ],
+    "long_crossing_distance": [
+      "CP001",
+      "CP003"
+    ],
+    "pedestrian_vehicle_conflict": [
+      "CP001",
+      "CP002",
+      "CP003",
+      "CP009"
+    ],
+    "poor_visibility": [
+      "CP002"
+    ],
+    "missing_shade": [
+      "CP007"
+    ],
+    "broken_walkway": [
+      "CP006",
+      "CP010"
+    ],
+    "accessibility_barrier": [
+      "CP004",
+      "CP005",
+      "CP006"
+    ],
+    "waterlogging": [
+      "CP010",
+      "CP011",
+      "CP012"
+    ],
+    "poor_drainage": [
+      "CP010",
+      "CP011",
+      "CP012"
+    ],
+    "missing_seating": [
+      "CP008"
+    ]
+  }
+}
