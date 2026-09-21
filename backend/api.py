@@ -67,9 +67,15 @@ async def analyze(
         return result
 
     except Exception as error:
+        error_msg = str(error)
+        if "Gemini is temporarily unavailable after retrying the available CITYPATCH models." in error_msg:
+            raise HTTPException(
+                status_code=503,
+                detail="Gemini is temporarily unavailable after retrying the available CITYPATCH models."
+            )
         raise HTTPException(
             status_code=500,
-            detail=f"CITYPATCH analysis failed: {str(error)}"
+            detail=f"CITYPATCH analysis failed: {error_msg}"
         )
 
     finally:
