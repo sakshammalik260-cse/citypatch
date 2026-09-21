@@ -19,26 +19,46 @@ $$\begin{array}{rcc}
 \end{array}$$
 
 1. **AI Understands**: Google Gemini Vision (`gemini-3.6-flash`) analyzes real-world photographs to detect civic failures, environmental factors, and site constraints, structured and validated against `schemas/civic_diagnosis.schema.json` using `jsonschema.validate()`.
-2. **CITYPATCH Constrains**: Solutions are drawn exclusively from an immutable, bounded library of verified modular infrastructure components (`data/civic_modules.json`). Patch ranking, compatibility checks, and cost calculations are 100% deterministic code.
+2. **CITYPATCH Constrains**: Solutions are drawn exclusively from a bounded prototype library of 12 civic intervention modules (`data/civic_modules.json`). Patch ranking, compatibility checks, and cost calculations are 100% deterministic code.
 3. **Humans Approve**: All proposals culminate in a formal **Draft Patch Passport** held at **Gate 4 (Engineer Review)**. No physical work is authorized without professional engineering sign-off.
+
+## Why CITYPATCH is Different
+
+Most AI systems stop at text suggestions or unconstrained image generation with physically impossible hallucinations.
+
+CITYPATCH fundamentally separates:
+1. **PERCEPTION (Gemini Vision Compiler)**: Multimodal scene diagnosis, defect classification, severity/confidence scoring, and site constraint identification.
+2. **DECISION CONSTRAINTS (Deterministic Patch Engine)**: Algorithmic mapping exclusively into a bounded catalogue of 12 prototype civic intervention modules (`data/civic_modules.json`), compatibility graphs, and cost/labor ranges. Zero generative hallucinations.
+3. **PHYSICAL AUTHORITY (Civil Engineer Gate)**: Formal municipal traceability via the Draft Patch Passport. Deployment is held at Gate 4 requiring professional civil engineering review.
 
 ---
 
-## 60-Second Judge Demo Flow
+## 90-Second Demo
 
-Experience the complete end-to-end pipeline in under a minute:
+Follow these exact steps for an efficient evaluation:
+1. Open `http://localhost:5173` and click **JUDGE DEMO** in the header navigation to activate guided flow.
+2. Click **Load Demo Photo** in the scanner dropzone (or upload your own street/pavement photo).
+3. Click **ANALYZE WITH CITYPATCH** to compile the real scene through the pipeline.
+4. Review the structured diagnosis and observe the **"Why CITYPATCH is Not Just an AI Response"** architectural pipeline.
+5. Review the **Bounded Civic Patch Library** showing the 12 prototype civic intervention modules.
+6. Toggle between **Quick Patch**, **Smart Patch** (recommended), and **Full Patch**; inspect the deterministic explainability table.
+7. Click **Prepare Patch for Review** to generate the **Draft Patch Passport**.
+8. Inspect the **Site Readiness** panel (showing computational prerequisites vs. pending physical site surveys) and click **Print / PDF** to view the clean municipal engineering submittal.
 
-1. **Launch**: Start the backend (`uvicorn backend.api:app --port 8000`) and frontend (`npm run dev` on port 5173). Open `http://localhost:5173`.
-2. **Inspect & Ingest**: Scroll to the **Civic Ingestion Workspace**. Drag and drop any civic photo, browse your files, or click **Load Demo Photo** to load the bundled portable scene (`frontend/public/demo_civic_scene.jpg`). Optionally enter context: *"Pedestrian gateway with surface pooling and tripping hazard"*.
-3. **Compile**: Click **ANALYZE WITH CITYPATCH**. Watch the cinematic compilation radar analyze the scene in real time.
-4. **Command Center Review**:
-   - **Diagnosis & Scene Reality**: Inspect the AI-detected problems (with severity `'low' | 'medium' | 'high'` and confidence `0–1`), observed constraints, and required engineering site surveys.
-   - **Patch Comparison**: Toggle between **Quick Patch** (immediate stabilization), **Smart Patch** (balanced upgrade), and **Full Patch** (complete infrastructure).
-   - **Interactive 3D Spatial Canvas**: Rotate and zoom the modular 3D bounding boxes and coordinate grid to inspect spatial footprint.
-   - **Deterministic Candidate Ranking**: View transparent scoring metrics and domain rationale.
-5. **Generate Draft Patch Passport**: Click **Prepare Patch for Review**.
-   - Review the 7-stage municipal lifecycle (`DETECT` ●, `DIAGNOSE` ●, `COMPOSE PATCH` ●, `ENGINEER REVIEW` ○, `APPROVE` ○, `DEPLOY` ○, `MEASURE` ○).
-   - Click **Print / Save as PDF** to generate an engineer submittal document, or click **Export JSON** for GIS/municipal database ingestion.
+---
+
+## Current Scope vs. Future Roadmap
+
+| Capability | Current MVP Status | Future Municipal Phase |
+| :--- | :--- | :--- |
+| **Scene Perception** | **OPERATIONAL**: Real photo analysis via Gemini Vision | Multi-angle drone / lidar point-cloud scans |
+| **Defect Classification** | **OPERATIONAL**: Strict JSON Schema validation (`schemas/civic_diagnosis.schema.json`) | Real-time municipal 311 service integration |
+| **Module Selection** | **OPERATIONAL**: Deterministic scoring from bounded 12-module library | Dynamic contractor inventory & regional supply chain |
+| **Intervention Packaging**| **OPERATIONAL**: Compatibility-checked Quick / Smart / Full tiers | Automated municipal bid & RFP generation |
+| **Cost & Time Estimates** | **OPERATIONAL**: Catalog range aggregates (`data/civic_modules.json`) | Construction-ready dimensional bills of quantities |
+| **Site Authorization** | **OPERATIONAL**: Draft Patch Passport at Gate 4 (Engineer Gate) | Digital municipal stamping & permitting workflow |
+| **Ground Deployment** | **PENDING**: Prototype demonstration only (No physical works) | Tactical urbanist dry-assembly field installation |
+| **Civic Verification** | **PENDING**: Post-deployment sensors & resident feedback loop | Long-term IoT sensor monitoring & drainage metrics |
 
 ---
 
@@ -86,11 +106,11 @@ Experience the complete end-to-end pipeline in under a minute:
 ## Key Capabilities
 
 - **Strict Schema Enforcement**: Ingested photographs are validated against `schemas/civic_diagnosis.schema.json` into normalized civic problem types (`unsafe_crossing`, `waterlogging`, `broken_walkway`, `poor_visibility`, etc.) with discrete severity levels (`'low' | 'medium' | 'high'`) and numeric confidence (`0–1`).
-- **Zero Hallucination Guardrails**: Gemini has zero authority to design physical hardware. Modules are selected exclusively from a verified catalog of pre-engineered, dry-assembly civic components (`data/civic_modules.json`).
-- **Three-Tier Packaging**:
-  - **Quick Patch**: Low-cost, minimal disruption, rapid deployment (< 8 hours).
-  - **Smart Patch**: Optimal balance of cost, safety, and durability (Recommended).
-  - **Full Patch**: Comprehensive upgrade addressing all primary and secondary civic deficiencies.
+- **Zero Hallucination Guardrails**: Gemini has zero authority to design physical hardware. Modules are selected exclusively from a bounded prototype library of 12 civic intervention modules (`data/civic_modules.json`).
+- **Three-Tier Packaging (from `data/patch_tiers.json`)**:
+  - **Quick Patch**: Single module focused on highest-priority civic issue (max 1 module).
+  - **Smart Patch**: Balanced intervention addressing multiple related issues (max 2 modules, recommended).
+  - **Full Patch**: Broader intervention combining multiple compatible modules (max 3 modules).
 - **Draft Patch Passport (`CP-DRAFT-YYYYMMDD-XXXX`)**: A formal municipal audit trail establishing accountability, site constraints, missing information surveys, and life-cycle progress.
 - **Spatial 3D & Graceful 2D Fallback**: Real-time WebGL 3D spatial visualizer with an automatic zero-failure 2D blueprint fallback if WebGL is unavailable.
 - **Complete Data Integrity**: Zero fabricated GPS coordinates, zero made-up material quantities (rebar tons, concrete volumes). Explicit disclaimers on every engineering surface.
@@ -213,9 +233,18 @@ Ingests an urban photograph and outputs structured diagnosis, ranked modules, pa
     "full": { "name": "Full Patch", "modules": [...] }
   },
   "tier_summary": {
-    "quick": { "total_cost_min": 600, "total_cost_max": 1200, "estimated_hours": 8 },
-    "smart": { "total_cost_min": 1800, "total_cost_max": 3400, "estimated_hours": 20 },
-    "full": { "total_cost_min": 4500, "total_cost_max": 8200, "estimated_hours": 48 }
+    "quick": {
+      "estimated_cost_inr": { "min": 20000, "max": 70000 },
+      "estimated_installation_hours": { "min": 6, "max": 20 }
+    },
+    "smart": {
+      "estimated_cost_inr": { "min": 35000, "max": 130000 },
+      "estimated_installation_hours": { "min": 12, "max": 40 }
+    },
+    "full": {
+      "estimated_cost_inr": { "min": 45000, "max": 180000 },
+      "estimated_installation_hours": { "min": 16, "max": 56 }
+    }
   },
   "requires_human_review": true,
   "disclaimer": "Proposals generated by CITYPATCH are concept designs requiring licensed professional engineer review."
@@ -235,7 +264,7 @@ citypatch/
 │   ├── bom_engine.py        # Labor & cost aggregation engine
 │   └── pipeline.py          # Unified pipeline orchestration
 ├── data/
-│   └── civic_modules.json   # Bounded catalog of 12 verified physical modules
+│   └── civic_modules.json   # Bounded catalog of 12 prototype civic intervention modules
 ├── schemas/
 │   └── civic_diagnosis.schema.json # JSON Schema (Draft 2020-12) for Gemini output
 ├── case-studies/            # Verified prototype demonstration case studies

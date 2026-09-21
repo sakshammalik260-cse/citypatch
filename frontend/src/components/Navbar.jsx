@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { checkHealth } from '../api/citypatchApi';
 import { Eye, EyeOff } from 'lucide-react';
 
-export default function Navbar({ is3DActive, onToggle3D }) {
+export default function Navbar({ is3DActive, onToggle3D, isJudgeMode, onToggleJudgeMode }) {
   const [health, setHealth] = useState({ status: 'checking', service: '', version: '' });
 
   useEffect(() => {
@@ -60,6 +60,15 @@ export default function Navbar({ is3DActive, onToggle3D }) {
           </div>
 
           <span className="nav-badge">PROTOTYPE v0.1</span>
+
+          <button
+            onClick={onToggleJudgeMode}
+            className={`nav-toggle-judge ${isJudgeMode ? 'active' : ''}`}
+            title="Toggle guided 60-90s Judge Demo mode"
+            aria-label="Toggle Judge Demo Mode"
+          >
+            <span>JUDGE DEMO</span>
+          </button>
 
           <button
             onClick={onToggle3D}

@@ -12,6 +12,11 @@ import CandidateRanking from './components/CandidateRanking';
 import PatchPassport from './components/PatchPassport';
 import ErrorBanner from './components/ErrorBanner';
 import Footer from './components/Footer';
+import JudgeModeBar from './components/JudgeModeBar';
+import ExplainabilitySection from './components/ExplainabilitySection';
+import BoundedLibrary from './components/BoundedLibrary';
+import SiteReadiness from './components/SiteReadiness';
+import CaseStudyModal from './components/CaseStudyModal';
 import { analyzeCivicImage } from './api/citypatchApi';
 import gsap from 'gsap';
 
@@ -24,6 +29,12 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [selectedTierKey, setSelectedTierKey] = useState('smart');
   const [error, setError] = useState(null);
+
+  // Judge Mode & Case Study Modal State
+  const [isJudgeMode, setIsJudgeMode] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.hash === '#judge' || window.location.pathname.includes('/judge'));
+  });
+  const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
 
   // Draft Patch Passport State
   const [isPassportActive, setIsPassportActive] = useState(false);
@@ -143,11 +154,26 @@ export default function App() {
 
   const currentTier = result?.patch_tiers?.[selectedTierKey];
   const currentSummary = result?.tier_summary?.[selectedTierKey];
+  const currentJudgeStep = isPassportActive ? 4 : (result ? 3 : (selectedFile ? 1 : 1));
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Floating Glass Navigation */}
-      <Navbar is3DActive={is3DActive} onToggle3D={handleToggle3D} />
+      <Navbar
+        is3DActive={is3DActive}
+        onToggle3D={handleToggle3D}
+        isJudgeMode={isJudgeMode}
+        onToggleJudgeMode={() => setIsJudgeMode(p => !p)}
+      />
+
+      {/* Guided Judge Mode Bar */}
+      {isJudgeMode && (
+        <JudgeModeBar
+          currentStep={currentJudgeStep}
+          onSelectStep={() => {}}
+          onExitJudgeMode={() => setIsJudgeMode(false)}
+        />
+      )}
 
       <main style={{ flex: 1 }}>
         {/* Page 1: Full-Screen Cinematic Hero */}
@@ -168,8 +194,14 @@ export default function App() {
         {/* Cinematic Compilation Sequence */}
         {isAnalyzing && <LoadingState />}
 
-        {/* Error Alert */}
-        {error && <ErrorBanner error={error} onRetry={handleAnalyze} />}
+        {/* Error Alert with Case Study Fallback */}
+        {error && (
+          <ErrorBanner
+            error={error}
+            onRetry={handleAnalyze}
+            onViewCaseStudy={() => setIsCaseStudyOpen(true)}
+          />
+        )}
 
         {/* Page 3: Results Command Center */}
         {result && (
@@ -187,11 +219,17 @@ export default function App() {
                 previewUrl={previewUrl}
               />
 
+              {/* Explainability: Why CITYPATCH is Not Just an AI Response */}
+              <ExplainabilitySection />
+
               {/* Site Reality: Constraints & Missing Information */}
               <SiteReality
                 constraints={result.diagnosis?.constraints}
                 missingInformation={result.diagnosis?.missing_information}
               />
+
+              {/* Bounded Prototype Infrastructure Catalogue (12 Modules) */}
+              <BoundedLibrary />
 
               {/* Quick / Smart / Full Spatial Tier Selector */}
               <PatchComparison
@@ -202,7 +240,7 @@ export default function App() {
                 onPreparePassport={handlePreparePassport}
               />
 
-              {/* Selected Patch Specifications & Modules */}
+              {/* Selected Patch Specifications & Modules with Traceable Explainability */}
               {currentTier && (
                 <PatchDetail
                   selectedTier={currentTier}
@@ -213,6 +251,15 @@ export default function App() {
 
               {/* Why These Patches? Deterministic Candidate Ranking */}
               <CandidateRanking candidates={result.candidate_modules} />
+
+              {/* Site Readiness Decision Support Gate */}
+              {isPassportActive && currentTier && (
+                <SiteReadiness
+                  diagnosis={result.diagnosis}
+                  selectedTier={currentTier}
+                  summary={currentSummary}
+                />
+              )}
 
               {/* P1: Draft Patch Passport & City-As-Software Lifecycle */}
               {isPassportActive && currentTier && (
@@ -229,6 +276,12 @@ export default function App() {
           </section>
         )}
       </main>
+
+      {/* Documented Prototype Case Study Modal (Available for Judges & 503 Fallback) */}
+      <CaseStudyModal
+        isOpen={isCaseStudyOpen}
+        onClose={() => setIsCaseStudyOpen(false)}
+      />
 
       {/* Clean Minimal Footer */}
       <Footer />

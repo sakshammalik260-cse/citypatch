@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 
-export default function ErrorBanner({ error, onRetry }) {
+export default function ErrorBanner({ error, onRetry, onViewCaseStudy }) {
   if (!error) return null;
 
   return (
@@ -19,14 +19,20 @@ export default function ErrorBanner({ error, onRetry }) {
           </div>
         </div>
 
-        {onRetry && (
-          <button onClick={onRetry} className="btn-retry">
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        <div className="error-actions-row">
+          {onRetry && (
+            <button onClick={onRetry} className="btn-retry" type="button">
               <RotateCcw size={14} />
-              <span>Retry</span>
-            </span>
-          </button>
-        )}
+              <span>Retry Analysis</span>
+            </button>
+          )}
+
+          {onViewCaseStudy && (
+            <button onClick={onViewCaseStudy} className="btn-case-study-cta" type="button">
+              <span>View Prototype Case Study</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

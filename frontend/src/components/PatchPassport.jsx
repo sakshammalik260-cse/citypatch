@@ -34,13 +34,13 @@ export default function PatchPassport({
 
   // Lifecycle steps: first 3 are completed by CITYPATCH, remaining 4 are strictly pending human/civil action
   const lifecycleSteps = [
-    { label: 'DETECT', completed: true, status: 'Photo Ingested' },
-    { label: 'DIAGNOSE', completed: true, status: 'Compiler Validated' },
-    { label: 'COMPOSE PATCH', completed: true, status: 'Tiers Synthesized' },
-    { label: 'ENGINEER REVIEW', completed: false, status: 'Pending Review', current: true },
-    { label: 'APPROVE', completed: false, status: 'Not Approved' },
-    { label: 'DEPLOY', completed: false, status: 'Not Started' },
-    { label: 'MEASURE', completed: false, status: 'Not Available / Not Yet Deployed' },
+    { label: 'DETECTED', completed: true, status: 'Photo Ingested' },
+    { label: 'DIAGNOSED', completed: true, status: 'Schema Validated' },
+    { label: 'PATCH COMPOSED', completed: true, status: 'Deterministic Tiers' },
+    { label: 'ENGINEER REVIEW', completed: false, status: 'REQUIRED / PENDING', current: true },
+    { label: 'APPROVED', completed: false, status: 'NOT APPROVED' },
+    { label: 'DEPLOYED', completed: false, status: 'NOT STARTED' },
+    { label: 'MEASURED', completed: false, status: 'NOT AVAILABLE — PATCH NOT DEPLOYED' },
   ];
 
   const handlePrint = () => {
@@ -147,23 +147,23 @@ export default function PatchPassport({
         {/* High-Level Status Meta Grid */}
         <div className="passport-status-grid">
           <div className="status-item">
-            <span className="status-item-label">PATCH STATUS</span>
-            <span className="status-item-value text-amber font-mono">Draft — Human Review Pending</span>
-          </div>
-
-          <div className="status-item">
-            <span className="status-item-label">ENGINEERING GATE</span>
-            <span className="status-item-value text-amber font-mono">Review Required Prior to Works</span>
+            <span className="status-item-label">ENGINEER REVIEW STATUS</span>
+            <span className="status-item-value text-amber font-mono">REQUIRED / PENDING</span>
           </div>
 
           <div className="status-item">
             <span className="status-item-label">DEPLOYMENT STATUS</span>
-            <span className="status-item-value font-mono">Not Started</span>
+            <span className="status-item-value font-mono">NOT STARTED</span>
           </div>
 
           <div className="status-item">
-            <span className="status-item-label">IMPACT VERIFICATION</span>
-            <span className="status-item-value font-mono">Not Available / Not Yet Deployed</span>
+            <span className="status-item-label">IMPACT VERIFICATION STATUS</span>
+            <span className="status-item-value font-mono">NOT AVAILABLE — PATCH NOT DEPLOYED</span>
+          </div>
+
+          <div className="status-item">
+            <span className="status-item-label">PHYSICAL QUANTITY STATUS</span>
+            <span className="status-item-value font-mono">Pending Verified Site Measurements</span>
           </div>
         </div>
 
@@ -241,6 +241,15 @@ export default function PatchPassport({
                 {hoursRange}
               </div>
               <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Excludes preliminary civil survey</span>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '0.85rem', paddingTop: '0.65rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <span className="passport-field-name">COVERED CIVIC PROBLEMS:</span>
+            <div style={{ display: 'inline-flex', flexWrap: 'wrap', gap: '0.3rem' }}>
+              {coveredProblems.map((prob, i) => (
+                <span key={i} className="passport-mini-tag">{humanize(prob)}</span>
+              ))}
             </div>
           </div>
         </div>

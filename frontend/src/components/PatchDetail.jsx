@@ -87,6 +87,67 @@ export default function PatchDetail({ selectedTier, summary, tierName }) {
         ))}
       </div>
 
+      {/* Traceable Explainability Table: Why Did CITYPATCH Choose This? */}
+      <div className="tier-explainability-section">
+        <div className="explainability-subhead">
+          <span className="section-tag">DETERMINISTIC SELECTION AUDIT</span>
+          <h4 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-display)', color: 'var(--text-white)', marginTop: '0.2rem' }}>
+            Why Did CITYPATCH Choose These Modules?
+          </h4>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+            Deterministic scoring breakdown based on detected defect severity and vision model confidence. No arbitrary equipment is permitted.
+          </p>
+        </div>
+
+        <div className="passport-problems-table-wrap" style={{ marginTop: '1rem' }}>
+          <table className="passport-table">
+            <thead>
+              <tr>
+                <th>Module ID</th>
+                <th>Module Name</th>
+                <th>Matched Problem</th>
+                <th>Severity Weight</th>
+                <th>Confidence Weight</th>
+                <th>Final Score</th>
+                <th>Compatibility Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modules.map((mod) => {
+                const breakdown = mod.score_breakdown && mod.score_breakdown.length > 0 ? mod.score_breakdown[0] : null;
+                const sevWeight = breakdown ? `${breakdown.severity?.toUpperCase()} (×${breakdown.severity_weight})` : 'Standard (×2)';
+                const confWeight = breakdown ? `${Math.round(breakdown.confidence * 100)}%` : '100%';
+                const compatLabel = mod.compatibility_status === 'potentially_complementary'
+                  ? 'Potentially Complementary'
+                  : 'Direct Problem Match';
+
+                return (
+                  <tr key={mod.module_id}>
+                    <td className="font-mono text-teal"><strong>{mod.module_id}</strong></td>
+                    <td><strong>{mod.name}</strong></td>
+                    <td>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+                        {(mod.matched_problems || []).map((p, idx) => (
+                          <span key={idx} className="solves-tag">{humanize(p)}</span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="font-mono">{sevWeight}</td>
+                    <td className="font-mono">{confWeight}</td>
+                    <td className="font-mono text-teal"><strong>{mod.score}</strong></td>
+                    <td>
+                      <span className={`compat-pill ${mod.compatibility_status === 'potentially_complementary' ? 'compat-complement' : 'compat-direct'}`}>
+                        {compatLabel}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Compliance Notice: No Fabricated Materials */}
       <div className="compliance-box">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', color: 'var(--text-secondary)' }}>

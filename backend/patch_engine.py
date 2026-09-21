@@ -127,12 +127,20 @@ def select_candidate_modules(diagnosis):
                 candidate_matches[module_id] = {
                     "module": modules_by_id[module_id],
                     "matched_problems": [],
+                    "score_breakdown": [],
                     "score": 0.0
                 }
 
             candidate_matches[module_id]["matched_problems"].append(
                 problem_type
             )
+            candidate_matches[module_id]["score_breakdown"].append({
+                "problem_type": problem_type,
+                "severity": severity,
+                "severity_weight": severity_weights.get(severity, 2),
+                "confidence": round(confidence, 3),
+                "contribution": round(problem_score, 3)
+            })
 
             candidate_matches[module_id]["score"] += problem_score
 
@@ -153,6 +161,8 @@ def select_candidate_modules(diagnosis):
                 "matched_problems": matched_problems,
                 "match_count": len(matched_problems),
                 "score": round(data["score"], 3),
+                "score_breakdown": data.get("score_breakdown", []),
+                "compatibility_status": "direct_problem_match",
                 "requires_engineer_review": module[
                     "requires_engineer_review"
                 ]
@@ -277,8 +287,10 @@ def build_patch_tiers(candidates):
                 if compatible_candidate is None:
                     break
 
+                complement_module = dict(compatible_candidate)
+                complement_module["compatibility_status"] = "potentially_complementary"
                 selected_modules.append(
-                    compatible_candidate
+                    complement_module
                 )
 
                 covered_problems.update(

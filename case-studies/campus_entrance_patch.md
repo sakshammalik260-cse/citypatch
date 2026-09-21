@@ -1,135 +1,126 @@
-# CITYPATCH Prototype Demonstration Case Study: Campus Entrance Walkway Patch
+# CITYPATCH Prototype Demonstration Case: Campus Entrance Walkway Patch
 
 > **CLASSIFICATION**: PROTOTYPE DEMONSTRATION CASE
 > **PIPELINE VERSION**: 0.1.0-civic-compiler
 > **GATE STATUS**: STAGE 4 / 7 — ENGINEER REVIEW REQUIRED (HUMAN-IN-THE-LOOP GATE)
-> **INPUT ASSET**: `test-images/campus_test.jpg` (Bundled demo counterpart: `frontend/public/demo_civic_scene.jpg`)
+> **INPUT ASSET**: `tests/campus_diagnosis.json` (evaluated with `test-images/campus_test.jpg`)
 
 ---
 
-## 1. Executive Summary
-
-CITYPATCH treats urban public space as modular, upgradable infrastructure. Rather than relying on multi-year municipal rebuild cycles or black-box generative fantasies, CITYPATCH executes a bounded, deterministic pipeline:
-
-$$\text{Image} \xrightarrow{\text{Gemini Vision}} \text{Civic Diagnosis} \xrightarrow{\text{Patch Engine}} \text{Ranked Modules} \xrightarrow{\text{BOM Engine}} \text{Draft Patch Passport}$$
-
-This case study documents an end-to-end run of the CITYPATCH pipeline on a real-world civic photograph depicting an active pedestrian gateway at an academic/institutional campus.
-
----
-
-## 2. Input Scene & Context
-
-- **Source**: Real-world civic photograph depicting a campus pedestrian entrance
-- **Location Status**: Spatial Grid // Local Scene (No GPS coordinates hard-coded or fabricated)
-- **Environment**: Urban / Institutional pedestrian gateway with high footfall, adjoining vehicular roadway, perimeter fencing, and unshaded walkways.
-- **Physical Conditions**:
-  - Surface drainage deficiency resulting in localized stormwater pooling.
-  - Grade transition hazard between roadway asphalt and pedestrian walkway.
-  - Inadequate nocturnal illumination and absent civic wayfinding for transit connectivity.
+## 1. Input Scene
+- **Visual Environment**: Roadside footpath edge adjacent to an elevated planter wall at an institutional entrance.
+- **Physical Deficiencies Observed**:
+  - Cracked and eroded concrete paving along the pedestrian surface exposing loose soil and dry leaves.
+  - Uneven step-downs, broken paving edges, and exposed flexible pipes lying across ground level creating tripping hazards.
+  - Kerbside concrete drain gutter partially filled with accumulated leaf debris, dirt, and loose wiring.
+- **Location Status**: `SPATIAL GRID // LOCAL SCENE` — No GPS coordinates are hard-coded or fabricated.
 
 ---
 
-## 3. Gemini Vision Civic Diagnosis
+## 2. Civic Diagnosis
+Ingested by the **Gemini Civic Compiler** (`backend/civic_compiler.py`) utilizing `gemini-3.6-flash`, structured strictly against `schemas/civic_diagnosis.schema.json` and validated locally with `jsonschema.validate()`:
 
-The image was ingested by the **Gemini Civic Compiler** (`backend/civic_compiler.py`) utilizing `gemini-3.6-flash` with structured JSON schema enforcement validated against `schemas/civic_diagnosis.schema.json` via Python `jsonschema.validate()`.
-
-### A. Scene Classification & Summary
-- **Scene Type**: `campus_road` / `pedestrian_zone`
-- **Summary**: Mixed-use pedestrian approach exhibiting surface degradation, stormwater accumulation along uncurbed borders, and a lack of protective micro-infrastructure for daily transit users.
-
-### B. Identified Problems
-| Problem Type | Severity (`low`/`medium`/`high`) | Model Confidence ($0–1$) | Observed Visual Evidence |
-| :--- | :--- | :--- | :--- |
-| `waterlogging` | **high** | 0.92 | Surface depression trapping run-off along edge of walkway |
-| `broken_walkway` | **medium** | 0.88 | Unstabilized shoulder, tripping hazard adjacent to asphalt |
-| `poor_visibility` | **medium** | 0.80 | Absence of human-scale illumination poles or campus directional markers |
-
-### C. Site Constraints & Missing Information
-- **Observed Constraints**:
-  - Continuous pedestrian access must be preserved during installation.
-  - Proximity to roadway limits lateral excavation depth without trench shoring.
-  - Fencing boundary restricts wide staging footprints.
-- **Missing Information (Engineers Must Verify On-Site)**:
-  - Subsurface utility survey (electrical, municipal stormwater mains, gas conduits).
-  - Soil percolation rate and load-bearing capacity test ($kN/m^2$).
-  - Exact topographic gradient and peak monsoon rainfall flow rates.
+- **Scene Classification**: `footpath`
+- **Observation Summary**: A roadside footpath edge adjacent to an elevated planter wall, showing damaged paving, exposed soil, loose utility hoses, and leaf-filled kerbside drainage.
+- **Detected Civic Problems**:
+  1. `broken_walkway` — Severity: **medium** &bull; Confidence: **0.95** &bull; Evidence: *"Cracked and eroded concrete paving along the pedestrian surface exposing loose soil and dry leaves."*
+  2. `accessibility_barrier` — Severity: **medium** &bull; Confidence: **0.88** &bull; Evidence: *"Uneven step-downs, broken paving edges, and exposed flexible pipes lying across the ground level create tripping hazards."*
+  3. `poor_drainage` — Severity: **medium** &bull; Confidence: **0.82** &bull; Evidence: *"The concrete kerbside drain gutter is partially filled with accumulated leaf debris, dirt, and loose wiring."*
 
 ---
 
-## 4. Deterministic Candidate Module Ranking
+## 3. Deterministic Mapping
+Problems are mapped to permitted candidate modules using `data/problem_module_map.json`:
+- `broken_walkway` $\to$ `CP006` (Accessible Walkway Module), `CP010` (Permeable Paver Module)
+- `accessibility_barrier` $\to$ `CP004` (Modular Accessibility Ramp), `CP005` (Tactile Guidance Path), `CP006` (Accessible Walkway Module)
+- `poor_drainage` $\to$ `CP010` (Permeable Paver Module), `CP011` (Modular Rain Garden), `CP012` (Surface Drainage Channel)
 
-The raw diagnosis was forwarded to the **CITYPATCH Patch Engine** (`backend/patch_engine.py`). Crucially, Gemini was **not** permitted to hallucinate modular equipment; candidates were scored and filtered deterministically from `data/civic_modules.json`:
-
-$$\text{Score}(m) = \text{base\_score} + \text{severity\_weight} + \text{applicability\_boost} - \text{constraint\_penalties}$$
-
-### Ranked Module Table
-1. **`MOD-DRN-01` (Modular Permeable Infiltration Trench)**
-   - *Domain*: Drainage & Stormwater
-   - *Score*: `9.4 / 10`
-   - *Rationale*: Directly arrests stormwater ponding (`waterlogging`) via modular gravel-core infiltration cells without requiring extensive sub-grade plumbing.
-2. **`MOD-PV-02` (Modular Interlocking Tactile Paver Pad)**
-   - *Domain*: Pavement & Walkways
-   - *Score*: `8.9 / 10`
-   - *Rationale*: Stabilizes pedestrian shoulder (`broken_walkway`) with zero wet concrete pouring, providing universal accessibility and tactile warnings.
-3. **`MOD-LGT-01` (Off-Grid Solar Micro-Mast Luminaire)**
-   - *Domain*: Lighting & Public Safety
-   - *Score*: `8.1 / 10`
-   - *Rationale*: Resolves illumination void (`poor_visibility`) without trenching electrical mains; integrated motion-sensing battery system.
-4. **`MOD-URN-01` (Compact Dual-Stream Civic Waste Pod)**
-   - *Domain*: Sanitation & Waste
-   - *Score*: `7.2 / 10`
-   - *Rationale*: Secondary amenity module; enhances general cleanliness along the approach.
+$$\text{Module Score} = \sum (\text{Severity Weight} \times \text{Confidence})$$
+*(where severity weights: high = 3, medium = 2, low = 1)*
 
 ---
 
-## 5. Patch Tier Packaging
-
-The Patch Engine assembled three compatibility-checked intervention packages:
-
-### Tier 1: Quick Patch — Rapid Stabilization
-- **Modules**: `MOD-DRN-01` (Infiltration Trench)
-- **Target**: Immediate containment of high-severity drainage ponding.
-- **Estimated Installation Hours**: ~8 hours
-- **Indicative Equipment Range**: ₹50,000 – ₹1,00,000 INR
-- **Disruption Level**: Minimal (< 4 hours pedestrian corridor reroute)
-
-### Tier 2: Smart Patch — Balanced Functional Upgrade *(Recommended)*
-- **Modules**: `MOD-DRN-01` (Infiltration Trench) + `MOD-PV-02` (Tactile Pavers)
-- **Target**: Eliminates both standing water and walking surface hazards.
-- **Estimated Installation Hours**: ~20 hours
-- **Indicative Equipment Range**: ₹1,50,000 – ₹2,80,000 INR
-- **Disruption Level**: Low (Staged half-walkway installation)
-
-### Tier 3: Full Patch — Complete Urban Micro-Infrastructure
-- **Modules**: `MOD-DRN-01` + `MOD-PV-02` + `MOD-LGT-01` + `MOD-URN-01`
-- **Target**: Comprehensive civic upgrade providing drainage, accessibility, illumination, and sanitation.
-- **Estimated Installation Hours**: ~48 hours
-- **Indicative Equipment Range**: ₹3,50,000 – ₹6,50,000 INR
-- **Disruption Level**: Moderate (2 days partial access management)
+## 4. Candidate Modules
+The **Patch Engine** scores and ranks candidate components deterministically from `data/civic_modules.json`:
+1. **`CP006` (Accessible Walkway Module)** — Score: **3.66** (Matches `broken_walkway` $2 \times 0.95 = 1.90$ + `accessibility_barrier` $2 \times 0.88 = 1.76$).
+2. **`CP010` (Permeable Paver Module)** — Score: **3.54** (Matches `broken_walkway` $2 \times 0.95 = 1.90$ + `poor_drainage` $2 \times 0.82 = 1.64$).
+3. **`CP004` (Modular Accessibility Ramp)** — Score: **1.76** (Matches `accessibility_barrier` $2 \times 0.88 = 1.76$).
+4. **`CP005` (Tactile Guidance Path)** — Score: **1.76** (Matches `accessibility_barrier` $2 \times 0.88 = 1.76$).
+5. **`CP011` (Modular Rain Garden)** — Score: **1.64** (Matches `poor_drainage` $2 \times 0.82 = 1.64$).
+6. **`CP012` (Surface Drainage Channel)** — Score: **1.64** (Matches `poor_drainage` $2 \times 0.82 = 1.64$).
 
 ---
 
-## 6. Draft Patch Passport & City-As-Software Governance
-
-The generated artifact is formalized as a **Draft Patch Passport** (e.g., `CP-DRAFT-20260921-XXXX`), establishing municipal traceability:
-
-```
-[1] DETECT        ● Ingested photo
-[2] DIAGNOSE      ● Structured JSON Schema Validation (jsonschema.validate)
-[3] COMPOSE PATCH ● Deterministic Patch & BOM Engine
-[4] ENGINEER GATE ○ Active Review Barrier — Physical Sign-Off Required (Pending Review)
-[5] APPROVE       ○ Municipal Authority / Campus Facilities Approval (Not Approved)
-[6] DEPLOY        ○ Rapid Modular Assembly — No Wet Pouring (Not Started)
-[7] MEASURE       ○ Post-Deployment Civic Verification (Not Available / Pre-Deployment)
-```
-
-### Mandatory Human Review Checklist
-- [ ] Field survey of underground conduits within 1.5 meters of the infiltration trench axis.
-- [ ] Verification of sub-base soil permeability for permeable pavers.
-- [ ] Municipal structural engineer stamp on off-grid solar mast wind-load rating.
+## 5. Quick Patch
+- **Package Target**: Rapid stabilization of primary pedestrian surface.
+- **Configured Tier Limit**: Maximum 1 module (from `data/patch_tiers.json`).
+- **Selected Module**: `CP006` (Accessible Walkway Module).
+- **Problems Covered**: `accessibility_barrier`, `broken_walkway`.
+- **Estimated Installation Hours**: 6 – 20 hours.
+- **Indicative Cost Range**: ₹20,000 – ₹70,000 INR.
 
 ---
 
-## 7. Conclusion
+## 6. Smart Patch (Recommended)
+- **Package Target**: Balanced functional upgrade addressing all primary identified issues.
+- **Configured Tier Limit**: Maximum 2 modules (from `data/patch_tiers.json`).
+- **Selected Modules**: `CP006` (Accessible Walkway Module) + `CP010` (Permeable Paver Module).
+- **Problems Covered**: `accessibility_barrier`, `broken_walkway`, `poor_drainage`.
+- **Estimated Installation Hours**: 12 – 40 hours.
+- **Indicative Cost Range**: ₹35,000 – ₹1,30,000 INR.
 
-This case study proves that autonomous AI reasoning can be bounded by rigorous municipal software engineering. By constraining Gemini to diagnosis and driving deterministic module selection from a verified library, CITYPATCH provides actionable, safe, and deployable urban solutions that bridge civic emergencies and long-term municipal governance.
+---
+
+## 7. Full Patch
+- **Package Target**: Comprehensive multi-module remediation including dedicated drainage channel.
+- **Configured Tier Limit**: Maximum 3 modules (from `data/patch_tiers.json`).
+- **Selected Modules**: `CP006` (Accessible Walkway Module) + `CP010` (Permeable Paver Module) + `CP012` (Surface Drainage Channel).
+- **Problems Covered**: `accessibility_barrier`, `broken_walkway`, `poor_drainage`.
+- **Estimated Installation Hours**: 16 – 56 hours.
+- **Indicative Cost Range**: ₹45,000 – ₹1,80,000 INR.
+
+---
+
+## 8. Selected Example
+- **Selected Package**: **Smart Patch (Balanced Upgrade)**
+- **Composition**: Accessible Walkway Module (`CP006`) installed alongside Permeable Paver Module (`CP010`).
+- **Compatibility Status**: Both modules directly matched to diagnosed problems (`direct_problem_match`).
+
+---
+
+## 9. Prototype Cost / Time
+- **Total Indicative Cost**: ₹35,000 – ₹1,30,000 INR (derived from module ranges in `data/civic_modules.json`).
+- **Estimated Installation Duration**: 12 – 40 hours (dry-assembly modular components).
+- **Quantity Status**: `not_calculated` (Material quantities require physical on-site measurements).
+
+---
+
+## 10. Missing Site Information
+Items identified for verification prior to works:
+- On-site physical measurement of footpath width, slope, and elevation transition.
+- Verification of drainage outlet connectivity and clearance of kerbside debris.
+- Inspection of flexible pipes and utility cables traversing the footway surface.
+
+---
+
+## 11. Engineering Gate
+The generated proposal is held at **Gate 4 (Engineer Review Required)**:
+- **Draft Passport ID**: `CP-DRAFT-20260921-XXXX`
+- **Engineer Review Status**: `REQUIRED / PENDING`
+- **Deployment Status**: `NOT STARTED`
+- **Impact Verification Status**: `NOT AVAILABLE — PATCH NOT DEPLOYED`
+
+---
+
+## 12. What Would Happen Next
+1. **Field Engineering Verification**: Municipal or facility engineer reviews the proposal using the [Expert Review Template](../docs/expert_review_template.md).
+2. **Site Survey**: Physical tape/laser measurement of dimensions and utility inspection.
+3. **Stage 5 Approval**: Municipal review and work authorization.
+4. **Stage 6 Deployment**: Dry modular installation during scheduled maintenance window.
+5. **Stage 7 Post-Deployment**: Citizen feedback and walkway condition assessment.
+
+---
+
+No physical deployment has occurred.
+No construction quantities have been calculated.
+This case demonstrates the CITYPATCH prototype decision pipeline only.

@@ -14,12 +14,32 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="footer-principle">
-            AI understands &bull; <strong>CITYPATCH constrains</strong> &bull; Humans approve
+          <div className="footer-scope-block">
+            <div className="scope-col">
+              <span className="scope-tag text-teal">CURRENT MVP</span>
+              <ul className="scope-list">
+                <li>&bull; Real-image Gemini vision diagnosis</li>
+                <li>&bull; Strict JSON schema validation</li>
+                <li>&bull; Deterministic candidate scoring</li>
+                <li>&bull; Bounded 12-module civic library</li>
+                <li>&bull; Quick / Smart / Full patch packages</li>
+                <li>&bull; Draft Patch Passport &amp; Human gate</li>
+              </ul>
+            </div>
+            <div className="scope-col">
+              <span className="scope-tag text-dim">FUTURE ROADMAP</span>
+              <ul className="scope-list">
+                <li>&bull; Verified physical site measurements</li>
+                <li>&bull; Construction-ready engineering CAD</li>
+                <li>&bull; Municipal procurement &amp; permitting</li>
+                <li>&bull; Dry-assembly contractor deployment</li>
+                <li>&bull; Post-installation impact sensors</li>
+              </ul>
+            </div>
           </div>
 
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
-            PROTOTYPE v0.1 &bull; ENGINEERING REVIEW MANDATORY
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-dim)', textAlign: 'center' }}>
+            PROTOTYPE v0.1 &bull; ENGINEERING REVIEW MANDATORY &bull; FOR CIVIC DEMONSTRATION ONLY
           </div>
         </div>
       </div>
